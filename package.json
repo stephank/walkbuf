@@ -1,0 +1,13 @@
+{
+  "name": "walkbuf",
+  "version": "0.0.1",
+  "keywords": ["walk", "iterate", "buffer"],
+  "description": "Walk a buffer, much like traditional C file I/O.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stephank/walkbuf.git"
+  },
+  "main": "index.js",
+  "author": "Stéphan Kochen <stephan@kochen.nl>",
+  "license": "MIT"
+}
