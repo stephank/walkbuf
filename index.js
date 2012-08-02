@@ -7,7 +7,21 @@ function WalkBuf(buf, pos) {
 
 WalkBuf.prototype = {
 
+  // Rather than `(start, end)` or `(offset, length)` parameters, slice
+  // methods take a length from the current position. This helper calculates
+  // the end of the slice.
+  _calcExtent: function(length) {
+    if (length == null) {
+      return this.buf.length;
+    }
+    else {
+      return this.pos + length;
+    }
+  },
+
+
   // Methods to seek in the buffer.
+
   seek: function(pos) {
     this.pos = pos;
   },
@@ -20,7 +34,9 @@ WalkBuf.prototype = {
     this.pos += count;
   },
 
+
   // Methods that operate on slice of data.
+
   write: function(string, length, encoding) {
     var written = this.buf.write(string, this.pos, length, encoding);
     this.pos += written;
@@ -55,20 +71,21 @@ WalkBuf.prototype = {
     return this.buf.fill(value, start, end);
   },
 
-  // Rather than `(start, end)` or `(offset, length)` parameters, slice
-  // methods take a length from the current position. This helper calculates
-  // the end of the slice.
-  _calcExtent: function(length) {
-    if (length == null)
-      return this.buf.length;
-    else
-      return this.pos + length;
+
+  // Additional, non-Buffer methods.
+
+  // Reverse copy, ie. copy from another buffer into this one.
+  rcopy: function(sourceBuffer, start, end) {
+    var written = sourceBuffer.copy(this.buf, this.pos, start, end);
+    this.pos += written;
+    return written;
   }
 
 };
 
-// Methods that read numeric data,
-// mapped to the size in bytes on which they operate.
+
+// Methods that read numeric data.
+
 var readMethods = {
   readUInt8: 1,
   readUInt16LE: 2,
@@ -97,6 +114,7 @@ Object.keys(readMethods).forEach(function(method) {
 
 
 // Methods that write numeric data.
+
 var writeMethods = {
   writeUInt8: 1,
   writeUInt16LE: 2,
